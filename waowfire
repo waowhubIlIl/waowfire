@@ -1,0 +1,77 @@
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/waowhubIlIl/waowfire/refs/heads/main/waowfireweb"))()
+local vu1 = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt"))()
+local v3 = vu1.Window(vu1, "WaowHub FireTouch Version"):Server("Main", "")
+local v4 = v3:Channel("Main")
+local vu5 = 1 
+
+v4:Button("Enable reach RightLeg", function()
+    RunSteppedMobile = game:GetService("RunService").RenderStepped:Connect(function()
+        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
+            firetouchinterest(game.Players.LocalPlayer.Character["Right Leg"], game.Workspace.TPSSystem.TPS, 0)
+            firetouchinterest(game.Players.LocalPlayer.Character["Right Leg"], game.Workspace.TPSSystem.TPS, 1)
+        end
+        _G.Enabled = true 
+    end)
+end)
+
+v4:Button("Enable reach LeftLeg", function()
+    RunSteppedMobile = game:GetService("RunService").RenderStepped:Connect(function()
+        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
+            firetouchinterest(game.Players.LocalPlayer.Character["Left Leg"], game.Workspace.TPSSystem.TPS, 0)
+            firetouchinterest(game.Players.LocalPlayer.Character["Left Leg"], game.Workspace.TPSSystem.TPS, 1)
+        end
+        _G.Enabled = true
+    end)
+end)
+
+v4:Button("Enable reach Torso", function()
+    RunSteppedTorso = game:GetService("RunService").RenderStepped:Connect(function()
+        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
+            firetouchinterest(game.Players.LocalPlayer.Character["Torso"], game.Workspace.TPSSystem.TPS, 0)
+            firetouchinterest(game.Players.LocalPlayer.Character["Torso"], game.Workspace.TPSSystem.TPS, 1)
+        end
+        _G.Enabled = true
+    end)
+end)
+
+v4:Button("Enable reach Head", function()
+    RunSteppedHead = game:GetService("RunService").RenderStepped:Connect(function()
+        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
+            firetouchinterest(game.Players.LocalPlayer.Character["Head"], game.Workspace.TPSSystem.TPS, 0)
+            firetouchinterest(game.Players.LocalPlayer.Character["Head"], game.Workspace.TPSSystem.TPS, 1)
+        end
+        _G.Enabled = true
+    end)
+end)
+
+
+v4:Button("Enable GK Reach", function()
+    game:GetService("RunService").RenderStepped:Connect(function()
+        local v6 = game.Players.LocalPlayer
+        if v6.Character and v6.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            local v7 = v6.Character.HumanoidRootPart
+            local v8 = game.Workspace.TPSSystem.TPS
+            
+            if (v7.Position - v8.Position).Magnitude <= vu5 then
+                firetouchinterest(v6.Character["Right Arm"], v8, 0)
+                firetouchinterest(v6.Character["Right Arm"], v8, 1)
+                firetouchinterest(v6.Character["Left Arm"], v8, 0)
+                firetouchinterest(v6.Character["Left Arm"], v8, 1)
+            end
+        end
+    end)
+end)
+
+v3:Channel("Reach Studs"):Textbox("Studs/Distance", "Type here!", true, function(p9)
+    local v10 = tonumber(p9)
+    if v10 then
+        vu5 = v10
+    else
+        vu1:Notification("Error!", "Please enter a number.", "Okay!")
+    end
+end)
+
+local v11 = v3:Channel("Credits/Contact")
+v11:Button("Discord Server", function()
+    setclipboard("https://discord.gg/bnW3JfAt4P")
+end)
