@@ -1,77 +1,138 @@
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/waowhubIlIl/waowfire/refs/heads/main/waowfireweb"))()
-local vu1 = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt"))()
-local v3 = vu1.Window(vu1, "WaowHub FireTouch Version"):Server("Main", "")
-local v4 = v3:Channel("Main")
-local vu5 = 1 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local RootPart = Character:WaitForChild("HumanoidRootPart")
+local RunService = game:GetService("RunService")
 
-v4:Button("Enable reach RightLeg", function()
-    RunSteppedMobile = game:GetService("RunService").RenderStepped:Connect(function()
-        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
-            firetouchinterest(game.Players.LocalPlayer.Character["Right Leg"], game.Workspace.TPSSystem.TPS, 0)
-            firetouchinterest(game.Players.LocalPlayer.Character["Right Leg"], game.Workspace.TPSSystem.TPS, 1)
-        end
-        _G.Enabled = true 
-    end)
-end)
+local PartConnections = {}
+local PartDistances = {
+    ["Left Leg"] = 0,
+    ["Right Leg"] = 0,
+    ["Torso"] = 0,
+    ["Head"] = 0,
+    ["GK"] = 0,
+}
+local GK_PARTS = {"Right Arm", "Left Arm"}
 
-v4:Button("Enable reach LeftLeg", function()
-    RunSteppedMobile = game:GetService("RunService").RenderStepped:Connect(function()
-        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
-            firetouchinterest(game.Players.LocalPlayer.Character["Left Leg"], game.Workspace.TPSSystem.TPS, 0)
-            firetouchinterest(game.Players.LocalPlayer.Character["Left Leg"], game.Workspace.TPSSystem.TPS, 1)
-        end
-        _G.Enabled = true
-    end)
-end)
-
-v4:Button("Enable reach Torso", function()
-    RunSteppedTorso = game:GetService("RunService").RenderStepped:Connect(function()
-        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
-            firetouchinterest(game.Players.LocalPlayer.Character["Torso"], game.Workspace.TPSSystem.TPS, 0)
-            firetouchinterest(game.Players.LocalPlayer.Character["Torso"], game.Workspace.TPSSystem.TPS, 1)
-        end
-        _G.Enabled = true
-    end)
-end)
-
-v4:Button("Enable reach Head", function()
-    RunSteppedHead = game:GetService("RunService").RenderStepped:Connect(function()
-        if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game.Workspace.TPSSystem.TPS.Position).Magnitude <= vu5 then
-            firetouchinterest(game.Players.LocalPlayer.Character["Head"], game.Workspace.TPSSystem.TPS, 0)
-            firetouchinterest(game.Players.LocalPlayer.Character["Head"], game.Workspace.TPSSystem.TPS, 1)
-        end
-        _G.Enabled = true
-    end)
-end)
-
-
-v4:Button("Enable GK Reach", function()
-    game:GetService("RunService").RenderStepped:Connect(function()
-        local v6 = game.Players.LocalPlayer
-        if v6.Character and v6.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
-            local v7 = v6.Character.HumanoidRootPart
-            local v8 = game.Workspace.TPSSystem.TPS
-            
-            if (v7.Position - v8.Position).Magnitude <= vu5 then
-                firetouchinterest(v6.Character["Right Arm"], v8, 0)
-                firetouchinterest(v6.Character["Right Arm"], v8, 1)
-                firetouchinterest(v6.Character["Left Arm"], v8, 0)
-                firetouchinterest(v6.Character["Left Arm"], v8, 1)
-            end
-        end
-    end)
-end)
-
-v3:Channel("Reach Studs"):Textbox("Studs/Distance", "Type here!", true, function(p9)
-    local v10 = tonumber(p9)
-    if v10 then
-        vu5 = v10
-    else
-        vu1:Notification("Error!", "Please enter a number.", "Okay!")
+local function DisconnectActive(PartName)
+    if PartConnections[PartName] then
+        PartConnections[PartName]:Disconnect()
+        PartConnections[PartName] = nil
     end
-end)
+end
 
-local v11 = v3:Channel("Credits/Contact")
-v11:Button("Discord Server", function()
-    setclipboard("https://discord.gg/bnW3JfAt4P")
-end)
+local function HandlePartReach(PartName, Distance)
+    local IsGK = (PartName == "GK")
+    local TargetParts = IsGK and GK_PARTS or {PartName}
+    local CurrentConnection = PartConnections[PartName]
+
+    if Distance > 0 then
+        PartDistances[PartName] = Distance
+        
+        if not CurrentConnection then
+            PartConnections[PartName] = RunService.RenderStepped:Connect(function()
+                local Target = game.Workspace:FindFirstChild("TPSSystem") and game.Workspace.TPSSystem:FindFirstChild("TPS")
+
+                if Target then
+                    if (RootPart.Position - Target.Position).Magnitude <= PartDistances[PartName] then
+                        for _, pName in ipairs(TargetParts) do
+                            local CharacterPart = Character:FindFirstChild(pName)
+                            if CharacterPart then
+                                firetouchinterest(CharacterPart, Target, 0)
+                                firetouchinterest(CharacterPart, Target, 1)
+                            end
+                        end
+                    end
+                end
+            end)
+            print("Reach Etkin: " .. PartName .. " için başlatıldı.")
+        end
+        
+    else
+        PartDistances[PartName] = 0
+        if CurrentConnection then
+            DisconnectActive(PartName)
+            print("Reach Devre Dışı: " .. PartName .. " için durduruldu.")
+        end
+    end
+end
+
+-- LINORIA LIBRARY KÜTÜPHANESİ YÜKLEMESİ
+local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+
+local Window = Library:CreateWindow({
+    Title = 'WaowHub FireTouch Version', -- BAŞLIK GÜNCELLENDİ
+    Center = true,
+    AutoShow = true,
+    TabPadding = 8
+})
+
+local FireTouchTab = Window:AddTab('FireTouch')
+local LeftGroupBox = FireTouchTab:AddLeftGroupbox('FireTouch') -- BAŞLIK GÜNCELLENDİ
+-- Sağ bölüm tamamen kaldırıldığı için AddRightGroupbox satırı silindi.
+
+-- Fonksiyon: Her parça için Linoria Slider oluşturur
+local function CreateReachSlider(partName, initialValue)
+    LeftGroupBox:AddSlider(partName:gsub(" ", "") .. "Slider", { 
+        Text = partName .. " Studs", -- İSİM GÜNCELLENDİ
+        Default = initialValue or 0,
+        Min = 0,
+        Max = 30, -- MAKSİMUM DEĞER 30 YAPILDI
+        Rounding = 1,
+        Suffix = " studs",
+
+        Callback = function(Value)
+            local FloorValue = math.floor(Value * 10) / 10
+            HandlePartReach(partName, FloorValue)
+        end
+    })
+end
+
+-- Sliderların çağrılması
+CreateReachSlider("Left Leg")
+CreateReachSlider("Right Leg")
+CreateReachSlider("Torso")
+CreateReachSlider("Head")
+CreateReachSlider("GK")
+
+
+-- UI Settings Sekmesi (TÜMÜ İNGİLİZCE)
+local UISettingsTab = Window:AddTab('UI Settings')
+local MenuGroup = UISettingsTab:AddLeftGroupbox('Menu Settings') -- İNGİLİZCE
+local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
+
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+-- Menü Kısayolu Ayarı
+MenuGroup:AddLabel('Menu Keybind'):AddKeyPicker('MenuKeybind', { -- İNGİLİZCE
+    Default = 'K', 
+    NoUI = true, 
+    Text = 'Toggle menu visibility' -- İNGİLİZCE
+})
+
+Library.ToggleKeybind = Options.MenuKeybind
+
+-- Unload Butonu
+MenuGroup:AddButton({
+    Text = 'Unload Script', -- İNGİLİZCE
+    Func = function()
+        Library:Unload()
+        print("Script unloaded.")
+    end,
+    Tooltip = 'Completely stops and unloads the script.' -- İNGİLİZCE
+})
+
+-- Tema Yöneticisi
+ThemeManager:SetFolder('WaowHub_Configs')
+SaveManager:SetFolder('WaowHub_Configs')
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ 'MenuKeybind' })
+
+ThemeManager:ApplyToTab(UISettingsTab)
+SaveManager:BuildConfigSection(UISettingsTab)
+SaveManager:LoadAutoloadConfig()
