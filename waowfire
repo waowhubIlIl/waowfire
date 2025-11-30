@@ -363,7 +363,6 @@ local function HandlePartReach(PartName, Distance)
                     end
                 end
             end)
-            print("Reach Etkin: " .. PartName .. " için başlatıldı.")
         end
         
     else
@@ -432,6 +431,8 @@ CreateReachSlider("GK")
 -- REACT TAB 
 ----------------------------------------
 local ReactGroup = ReactTab:AddLeftGroupbox('React Enhancements')
+-- Madbliss grubu sağda yer alsın diye AddRightGroupbox kullanıldı.
+local MadblissGroup = ReactTab:AddRightGroupbox('Madbliss\'s Reacts') 
 
 ReactGroup:AddButton({
     Text = "Better React",
@@ -626,7 +627,6 @@ ReactGroup:AddButton({
         local function safeExecute(func)
             local success, err = pcall(func)
             if not success then
-                -- print("Hata oluştu: " .. err)
             end
         end
 
@@ -642,6 +642,166 @@ ReactGroup:AddButton({
         end)
     end,
     Tooltip = 'Delete Hit Delay Object' 
+})
+
+-- =========================================
+-- MADBLISS'S REACTS GRUBU (YENİ EKLENEN BUTONLAR)
+-- =========================================
+
+MadblissGroup:AddButton({
+    Text = "Main React",
+    Func = function()
+        pcall(function()
+            local tpsPart = workspace.TPSSystem and workspace.TPSSystem:FindFirstChild("TPS")
+            if tpsPart then
+                tpsPart.Velocity = Vector3.new(1.5, 1.5, 1.5)
+            end
+        end)
+    
+        pcall(function()
+            local practice = workspace:FindFirstChild("Practice")
+            if practice then
+                for _, ball in pairs(practice:GetChildren()) do
+                    if ball.Name == "PSoccerBall" and ball:IsA("BasePart") then
+                        if ball and ball.Parent then
+                            ball.Velocity = Vector3.new(1.5, 1.5, 1.5)
+                        end
+                    end
+                end
+            end
+        end)
+    end,
+    Tooltip = 'Madbliss Main React' 
+})
+
+MadblissGroup:AddButton({
+    Text = "Prztxl React",
+    Func = function()
+        pcall(function()
+            local tpsPart = workspace.TPSSystem and workspace.TPSSystem:FindFirstChild("TPS")
+            if tpsPart then
+                tpsPart.Velocity = Vector3.new(0.5, 0.5, 0.5)
+            end
+        end)
+    
+        pcall(function()
+            local practice = workspace:FindFirstChild("Practice")
+            if practice then
+                for _, ball in pairs(practice:GetChildren()) do
+                    if ball.Name == "PSoccerBall" and ball:IsA("BasePart") then
+                        if ball and ball.Parent then
+                            ball.Velocity = Vector3.new(0.5, 0.5, 0.5)
+                        end
+                    end
+                end
+            end
+        end)
+    end,
+    Tooltip = 'Madbliss Prztxl React' 
+})
+
+MadblissGroup:AddButton({
+    Text = "Mars React",
+    Func = function()
+        pcall(function()
+            local tpsPart = workspace.TPSSystem and workspace.TPSSystem:FindFirstChild("TPS")
+            if tpsPart then
+                tpsPart.Velocity = Vector3.new(2, 2, 2)
+            end
+        end)
+    
+        pcall(function()
+            local practice = workspace:FindFirstChild("Practice")
+            if practice then
+                for _, ball in pairs(practice:GetChildren()) do
+                    if ball.Name == "PSoccerBall" and ball:IsA("BasePart") then
+                        if ball and ball.Parent then
+                            ball.Velocity = Vector3.new(2, 2, 2)
+                        end
+                    end
+                end
+            end
+        end)
+    end,
+    Tooltip = 'Madbliss Mars React' 
+})
+
+MadblissGroup:AddButton({
+    Text = "Sourenos React",
+    Func = function()
+        pcall(function()
+            local tpsPart = workspace.TPSSystem and workspace.TPSSystem:FindFirstChild("TPS")
+            if tpsPart then
+                tpsPart.Velocity = Vector3.new(1.8, 1.8, 1.8)
+            end
+        end)
+    
+        pcall(function()
+            local practice = workspace:FindFirstChild("Practice")
+            if practice then
+                for _, ball in pairs(practice:GetChildren()) do
+                    if ball.Name == "PSoccerBall" and ball:IsA("BasePart") then
+                        if ball and ball.Parent then
+                            ball.Velocity = Vector3.new(1.8, 1.8, 1.8)
+                        end
+                    end
+                end
+            end
+        end)
+    end,
+    Tooltip = 'Madbliss Sourenos React' 
+})
+
+MadblissGroup:AddButton({
+    Text = "Dreelovv React",
+    Func = function()
+        pcall(function()
+            local tpsPart = workspace.TPSSystem and workspace.TPSSystem:FindFirstChild("TPS")
+            if tpsPart then
+                tpsPart.Velocity = Vector3.new(1, 1, 1)
+            end
+        end)
+    
+        pcall(function()
+            local practice = workspace:FindFirstChild("Practice")
+            if practice then
+                for _, ball in pairs(practice:GetChildren()) do
+                    if ball.Name == "PSoccerBall" and ball:IsA("BasePart") then
+                        if ball and ball.Parent then
+                            ball.Velocity = Vector3.new(1, 1, 1)
+                        end
+                    end
+                end
+            end
+        end)
+    end,
+    Tooltip = 'Madbliss Dreelovv React' 
+})
+
+MadblissGroup:AddButton({
+    Text = "Husam2727 React",
+    Func = function()
+        pcall(function()
+            local tpsPart = workspace.TPSSystem and workspace.TPSSystem:FindFirstChild("TPS")
+            if tpsPart then
+                tpsPart.Velocity = Vector3.new(0.00005, 0.00005, 0.00005)
+            end
+        end)
+    
+        pcall(function()
+            local practice = workspace:FindFirstChild("Practice")
+            if practice then
+                for _, ball in pairs(practice:GetChildren()) do
+                    if ball.Name == "PSoccerBall" and ball:IsA("BasePart") then
+                        if ball and ball.Parent then
+                            ball.Velocity = Vector3.new(0.00005, 0.00005, 0.00005)
+                        end
+                    end
+                end
+            end
+        end)
+    end,
+    Tooltip = 'Madbliss Husam2727 React' 
 })
 
 
@@ -782,9 +942,7 @@ UtilityGroup:AddButton({
                     vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
                 end)
             end)
-            warn("Anti AFK başlatıldı. (Script Unload edilene kadar çalışır)")
         else
-            warn("Anti AFK zaten çalışıyor.")
         end
     end,
     Tooltip = 'Prevents disconnection due to inactivity.' -- Yeni Tooltip
@@ -804,7 +962,6 @@ UtilityGroup:AddButton({
                     local obj = tpsPart:FindFirstChild(name)
                     if obj then
                         obj:Destroy()
-                        print("Anti Offside: " .. name .. " kaldırıldı.")
                     end
                 end
             end
@@ -859,7 +1016,6 @@ MenuGroup:AddButton({
         if ToggleConnections.AntiAFK then
             ToggleConnections.AntiAFK:Disconnect()
             ToggleConnections.AntiAFK = nil
-            warn("Anti AFK durduruldu.")
         end
         -- Diğer bağlantıları da temizle (Emin olmak için döngü)
         for _, connection in pairs(ToggleConnections) do
@@ -867,7 +1023,6 @@ MenuGroup:AddButton({
         end
 
         Library:Unload()
-        print("Script unloaded.")
     end,
     Tooltip = 'Completely stops and unloads the script.'
 })
